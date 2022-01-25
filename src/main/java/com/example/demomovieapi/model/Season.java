@@ -1,6 +1,7 @@
 package com.example.demomovieapi.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonView;
 import org.hibernate.validator.constraints.Range;
 
 import javax.persistence.*;
@@ -14,18 +15,23 @@ public class Season {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @JsonView(View.TvDetail.class)
     private long id;
 
     @NotNull(message = "Number must not be blank")
     @Range(min = 1)
+    @JsonView(View.TvDetail.class)
     private int season_number;
 
     @NotBlank(message = "Name must not be blank")
+    @JsonView(View.TvDetail.class)
     private String name;
 
     @NotBlank(message = "Air date must not be blank")
+    @JsonView(View.TvDetail.class)
     private String air_date;
 
+    @JsonView(View.TvDetail.class)
     private String overview;
 
     @ManyToOne(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
@@ -34,6 +40,7 @@ public class Season {
 
     @OneToMany(mappedBy = "season")
     @JsonIgnoreProperties("season")
+    @JsonView(View.TvDetail.class)
     private Set<Episode> episode = new HashSet<>();
 
     public Season() {
