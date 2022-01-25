@@ -52,6 +52,7 @@ public class Tv {
 
     @OneToMany(mappedBy = "tv")
     @JsonIgnoreProperties("tv")
+    @JsonView(View.TvDetail.class)
     private Set<Season> season = new HashSet<>();
 
     public Tv() {
