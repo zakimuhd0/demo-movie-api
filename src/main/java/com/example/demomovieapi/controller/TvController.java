@@ -46,9 +46,9 @@ public class TvController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", tvList);
-            response.put("currentPage", tvPage.getNumber() + 1);
-            response.put("totalItems", tvPage.getTotalElements());
-            response.put("totalPages", tvPage.getTotalPages());
+            response.put("current_page", tvPage.getNumber() + 1);
+            response.put("total_items", tvPage.getTotalElements());
+            response.put("total_pages", tvPage.getTotalPages());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
