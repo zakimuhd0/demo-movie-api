@@ -46,9 +46,9 @@ public class MovieController {
 
             Map<String, Object> response = new HashMap<>();
             response.put("data", tvList);
-            response.put("currentPage", moviePage.getNumber() + 1);
-            response.put("totalItems", moviePage.getTotalElements());
-            response.put("totalPages", moviePage.getTotalPages());
+            response.put("current_page", moviePage.getNumber() + 1);
+            response.put("total_items", moviePage.getTotalElements());
+            response.put("total_pages", moviePage.getTotalPages());
 
             return new ResponseEntity<>(response, HttpStatus.OK);
         } catch (Exception e) {
