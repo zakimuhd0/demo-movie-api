@@ -1,6 +1,7 @@
 package com.example.demomovieapi.controller;
 
 import com.example.demomovieapi.exception.ResourceNotFoundException;
+import com.example.demomovieapi.model.Genre;
 import com.example.demomovieapi.model.Tv;
 import com.example.demomovieapi.model.View;
 import com.example.demomovieapi.repository.TvRepository;
@@ -29,18 +30,22 @@ public class TvController {
     @JsonView(View.TvList.class)
     public ResponseEntity<Map<String, Object>> getAllTv(
             @RequestParam(required = false) String title,
+            @RequestParam(required = false, defaultValue = "0") int genre,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "3") int size
+            @RequestParam(defaultValue = "10") int size
     ) {
         try {
             List<Tv> tvList = new ArrayList<Tv>();
             Pageable paging = PageRequest.of(page - 1, size);
 
             Page<Tv> tvPage;
-            if (title == null)
-                tvPage = tvRepository.findAll(paging);
-            else
+            if (title != null) {
                 tvPage = tvRepository.findByTitle(title, paging);
+            } else if (genre != 0) {
+                tvPage = tvRepository.findByGenre(genre, paging);
+            }
+            else
+                tvPage = tvRepository.findAll(paging);
 
             tvList = tvPage.getContent();
 
