@@ -47,8 +47,12 @@ public class Tv {
     @JsonView(View.TvList.class)
     private Set<Genre> tv_genre_ids = new HashSet<>();
 
-    @NotBlank(message = "Country must not be blank")
-    private String country;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(name = "tv_country", joinColumns = @JoinColumn(name = "tv_id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id"))
+    @JsonIgnoreProperties("tvs")
+    @JsonView(View.TvList.class)
+    private Set<Country> tv_country_ids = new HashSet<>();
 
     @OneToMany(mappedBy = "tv")
     @JsonIgnoreProperties("tv")
@@ -58,7 +62,7 @@ public class Tv {
     public Tv() {
     }
 
-    public Tv(long id, String title, String overview, String first_air_date, String last_air_date, String poster_path, String backdrop_path, Set<Genre> tv_genre_ids, String country, Set<Season> season) {
+    public Tv(long id, String title, String overview, String first_air_date, String last_air_date, String poster_path, String backdrop_path, Set<Genre> tv_genre_ids, Set<Country> tv_country_ids, Set<Season> season) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -67,7 +71,7 @@ public class Tv {
         this.poster_path = poster_path;
         this.backdrop_path = backdrop_path;
         this.tv_genre_ids = tv_genre_ids;
-        this.country = country;
+        this.tv_country_ids = tv_country_ids;
         this.season = season;
     }
 
@@ -135,12 +139,12 @@ public class Tv {
         this.tv_genre_ids = tv_genre_ids;
     }
 
-    public String getCountry() {
-        return country;
+    public Set<Country> getTv_country_ids() {
+        return tv_country_ids;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setTv_country_ids(Set<Country> tv_country_ids) {
+        this.tv_country_ids = tv_country_ids;
     }
 
     public Set<Season> getSeason() {
@@ -162,7 +166,7 @@ public class Tv {
                 ", poster_path='" + poster_path + '\'' +
                 ", backdrop_path='" + backdrop_path + '\'' +
                 ", tv_genre_ids=" + tv_genre_ids +
-                ", country='" + country + '\'' +
+                ", tv_country_ids=" + tv_country_ids +
                 ", season=" + season +
                 '}';
     }
