@@ -29,23 +29,30 @@ public class MovieController {
     @JsonView(View.MovieList.class)
     public ResponseEntity<Map<String, Object>> getAllTv(
             @RequestParam(required = false) String title,
+            @RequestParam(required = false, defaultValue = "0") int genre,
+            @RequestParam(required = false) String country,
             @RequestParam(defaultValue = "1") int page,
-            @RequestParam(defaultValue = "3") int size
+            @RequestParam(defaultValue = "10") int size
     ) {
         try {
-            List<Movie> tvList = new ArrayList<Movie>();
+            List<Movie> movieList = new ArrayList<Movie>();
             Pageable paging = PageRequest.of(page - 1, size);
 
             Page<Movie> moviePage;
-            if (title == null)
-                moviePage = movieRepository.findAll(paging);
-            else
+            if (title != null) {
                 moviePage = movieRepository.findByTitle(title, paging);
+            } else if (genre != 0) {
+                moviePage = movieRepository.findByGenre(genre, paging);
+            } else if (country != null) {
+                moviePage = movieRepository.findByCountry(country, paging);
+            }
+            else
+                moviePage = movieRepository.findAll(paging);
 
-            tvList = moviePage.getContent();
+            movieList = moviePage.getContent();
 
             Map<String, Object> response = new HashMap<>();
-            response.put("data", tvList);
+            response.put("data", movieList);
             response.put("current_page", moviePage.getNumber() + 1);
             response.put("total_items", moviePage.getTotalElements());
             response.put("total_pages", moviePage.getTotalPages());
