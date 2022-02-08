@@ -43,13 +43,17 @@ public class Movie {
     @JsonView(View.MovieList.class)
     private Set<Genre> movie_genre_ids = new HashSet<>();
 
-    @NotBlank(message = "Country must not be blank")
-    private String country;
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.REFRESH}, fetch = FetchType.LAZY)
+    @JoinTable(name = "movie_country", joinColumns = @JoinColumn(name = "movie_id"),
+            inverseJoinColumns = @JoinColumn(name = "country_id"))
+    @JsonIgnoreProperties("movies")
+    @JsonView(View.MovieList.class)
+    private Set<Country> movie_country_ids = new HashSet<>();
 
     public Movie() {
     }
 
-    public Movie(long id, String title, String overview, String release_date, String poster_path, String backdrop_path, Set<Genre> movie_genre_ids, String country) {
+    public Movie(long id, String title, String overview, String release_date, String poster_path, String backdrop_path, Set<Genre> movie_genre_ids, Set<Country> movie_country_ids) {
         this.id = id;
         this.title = title;
         this.overview = overview;
@@ -57,7 +61,7 @@ public class Movie {
         this.poster_path = poster_path;
         this.backdrop_path = backdrop_path;
         this.movie_genre_ids = movie_genre_ids;
-        this.country = country;
+        this.movie_country_ids = movie_country_ids;
     }
 
     public long getId() {
@@ -116,12 +120,12 @@ public class Movie {
         this.movie_genre_ids = movie_genre_ids;
     }
 
-    public String getCountry() {
-        return country;
+    public Set<Country> getMovie_country_ids() {
+        return movie_country_ids;
     }
 
-    public void setCountry(String country) {
-        this.country = country;
+    public void setMovie_country_ids(Set<Country> movie_country_ids) {
+        this.movie_country_ids = movie_country_ids;
     }
 
     @Override
@@ -134,7 +138,7 @@ public class Movie {
                 ", poster_path='" + poster_path + '\'' +
                 ", backdrop_path='" + backdrop_path + '\'' +
                 ", movie_genre_ids=" + movie_genre_ids +
-                ", country='" + country + '\'' +
+                ", movie_country_ids=" + movie_country_ids +
                 '}';
     }
 }
